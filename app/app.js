@@ -8,7 +8,8 @@ import {
 	// 导航
 	Navigator,
 	TouchableOpacity,
-	Platform
+	Platform,
+	BackAndroid
 } from 'react-native';
 
 // page component
@@ -20,6 +21,30 @@ export default class App extends Component {
 	constructor(props) {
 		super(props);
 	}
+
+	// 处理物理返回键
+	componentDidMount() {
+		BackAndroid.addEventListener('hardwareBackPress', this.handleBack.bind(this));
+	}
+
+	// 处理返回键
+	handleBack() {
+		let navigator = this.refs.navigator;
+		const routers = navigator.getCurrentRoutes();
+	    if (routers.length === 1) {
+	    	// 如果不在，就是后退，不然就是退出应用
+	    	BackAndroid.exitApp();
+		    return false;
+	    }else {
+	       	navigator.pop();
+	       	return true;
+	    }
+	}
+	// 组件被卸载
+	componentWillUnmount() {
+		BackAndroid.removeEventListener('hardwareBackPress');
+	}
+
 	// 渲染导航条
 	_renderNavBar() {
 		const styles = {
@@ -103,6 +128,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<Navigator 
+				ref = 'navigator'
 				initialRoute = {{component: Index}}
 				renderScene = {
 					(route, navigator) => {
@@ -111,11 +137,12 @@ export default class App extends Component {
 							<Component
 								name = {route.name}
 								onForward = {
-									() => {
+									(name, component) => {
 										let nextIndex = route.index + 1;
 										navigator.push({
-											name: 'Scene ' + nextIndex,
-											index: nextIndex
+											name: name || ('Scene ' + nextIndex),
+											index: nextIndex,
+											component
 										});
 									}
 								}

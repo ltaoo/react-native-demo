@@ -4,8 +4,11 @@ import {
 	View,
 	Text,
 	Modal,
-	Button
+	TouchableOpacity
 } from 'react-native';
+
+// 模态框测试
+import ModalView from './ModalDemo';
 
 export default class Index extends Component {
 	constructor(props) {
@@ -13,9 +16,17 @@ export default class Index extends Component {
 	}
 
 	render() {
+		const {onForward} = this.props;
 		return (
 			<View style = {styles.container}>
 				<Text>Index Component</Text>
+				<TouchableOpacity
+					onPress = {()=> {
+						onForward('modal', ModalView);
+					}}
+				>
+					<Text>Modal</Text>
+				</TouchableOpacity>
 			</View>
 		)
 	}
