@@ -8,7 +8,7 @@ import {
 	TouchableOpacity
 } from 'react-native';
 
-export default class Modal extends Component {
+export default class cutomerModal extends Component {
 	constructor(props) {
 		super(props);
 
@@ -16,8 +16,6 @@ export default class Modal extends Component {
 		this.state = {
 			modalVisible: props.visible === undefined ? false : props.visible
 		};
-
-		this._setModalVisible = this._setModalVisible.bind(this);
 	}
 
 	static PropTypes = {
@@ -40,19 +38,11 @@ export default class Modal extends Component {
 		animationType: 'none',
 		content: (
 			<TouchableOpacity
-	        	onPress={this._setModalVisible.bind(this, false)}
 	        >
 	        	<Text>关闭</Text>
 	      	</TouchableOpacity>
 	    )
 	};
-
-	_setModalVisible(value) {
-		// value 是 true 或者 false
-		this.setState({
-			modalVisible: value
-		});
-	}
 
 	render() {
 		const {
@@ -76,6 +66,7 @@ export default class Modal extends Component {
 	          	animationType={animationType}
 	          	transparent={transparent}
 	          	visible={visible}
+	          	onRequestClose = {()=> this.props.visible = false}
 	        >
 		        <View style={[styles.container, modalBackgroundStyle]}>
 		            <View style={[styles.innerContainer, innerContainerTransparentStyle]}>
