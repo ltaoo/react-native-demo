@@ -11,29 +11,38 @@ import {
 export default class ListViewDemo extends Component {
 	constructor(props) {
 		super(props);
-		// 初始化数据
-		let ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-		// mock 数据
-		let data = [{
-			name: 'react-native'
-		}, {
-			name: 'react'
-		}, {
-			name: 'redux'
-		}, {
-			name: 'react-router'
-		}];
-		data = data.map(item=> {
-			item.isCheck = 'false';
-			return item;
-		})
 		// 初始化 state
 		this.state = {
-			data: data,
-			ds: ds.cloneWithRows(data),
+			loading: true,
+			data: [],
+			dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
 			// 选中数组
 			selected: []
 		};
+	}
+	// 
+	componentDidMount() {
+		// get data from server
+		fetch('https://api.douban.com/v2/book/search?q=react&count=10')
+			.then(res=> {
+				if(res.status === 200) {
+					// parse response
+					let data = JSON.parse(res._bodyInit).books;
+					data = data.map(item=> {
+						// add a props for mark
+						item.isCheck = false;
+						return item;
+					})
+					this.setState({
+						loading: false,
+						data: data,
+						dataSource: this.state.dataSource.cloneWithRows(data)
+					})
+				}
+			})
+			.catch(err=> {
+				alert(JSON.stringify(err));
+			})
 	}
 	// 单列样式
 	_renderRow(row, sectionId, rowId) {
@@ -49,70 +58,26 @@ export default class ListViewDemo extends Component {
 					this.select.call(this, row);
 				}}
 			>
-				<Text>{row.name}</Text>
+				<Text>{row.title}</Text>
 				<Text>{row.isCheck}</Text>
 			</TouchableOpacity>
 		)
 	}
-	// 增加行函数
-	add() {
-		let newData = {
-			name: 'vue',
-			isCheck: 'false'
-		};
-		let oldDataAry = [...this.state.data];
-		let newDataAry = [...oldDataAry, newData];
-		let newDs = this.state.ds.cloneWithRows(newDataAry);
-		this.setState({
-			data: newDataAry,
-			ds: newDs
-		});
-	}
-	// 删除指定行
-	delete(row) {
-		let oldDataAry = [...this.state.data];
-		let index = oldDataAry.indexOf(row);
-		oldDataAry.splice(index, 1);
-		let newDataAry = oldDataAry;
-		let newDs = this.state.ds.cloneWithRows(newDataAry);
-		this.setState({
-			data: newDataAry,
-			ds: newDs
-		});
-	}
-	// 点击选中
-	select(row) {
-		// 
-		let oldSelectAry = [...this.state.selected];
-		let newSelectAry = [...oldSelectAry, row];
-		// 重新渲染 dataSource
-		let oldDataAry = [...this.state.data];
-		
-		let newDataAry = new Array();
-		// 对旧数据中的值进行更新
-		newDataAry = oldDataAry.filter(item=> {
-			if(item === row) {
-				item.isCheck = 'true';
-				return item;
-			}
-			else {
-				return item;
-			}
-		});
-		let newDs = this.state.ds.cloneWithRows(newDataAry);
-		this.setState({
-			selected: newSelectAry,
-			data: newDataAry,
-			ds: newDs
-		});
-	}
 	//
 	render() {
+		if(this.state.loading) {
+			// if is loading
+			return (
+				<View style = {styles.empty}>
+					<Text>loading...</Text>
+				</View>
+			)
+		}
 		return (
 			<View style = {styles.container}>
 				<ListView
 					style = {styles.list}
-					dataSource = {this.state.ds}
+					dataSource = {this.state.dataSource}
 					renderRow = {this._renderRow.bind(this)}
 					enableEmptySections = {true}
 				/>
@@ -120,7 +85,7 @@ export default class ListViewDemo extends Component {
 					style = {styles.btn}
 					onPress = {this.add.bind(this)}
 				>
-					<Text>增加行</Text>
+					<Text>More</Text>
 				</TouchableOpacity>
 			</View>
 		)
@@ -131,6 +96,11 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: '#eee'
+	},
+	empty: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	list: {
 

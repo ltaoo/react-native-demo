@@ -11,6 +11,8 @@ import {
 import ModalView from './ModalDemo';
 // Image 组件测试
 import ImageView from './ImageDemo';
+// ListView test
+import ListviewView from './ListViewDemo';
 
 export default class Index extends Component {
 	constructor(props) {
@@ -35,6 +37,13 @@ export default class Index extends Component {
 					}}
 				>
 					<Text>Image</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress = {()=> {
+						onForward('ListView', ListviewView);
+					}}
+				>
+					<Text>ListView</Text>
 				</TouchableOpacity>
 			</View>
 		)
