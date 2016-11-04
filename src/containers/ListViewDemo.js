@@ -5,8 +5,13 @@ import {
 	View,
 	ListView,
 	Text,
-	TouchableOpacity
+	TouchableOpacity,
+	Image,
+	// width and height of screen
+	Dimensions
 } from 'react-native';
+
+let {height, width} = Dimensions.get('window');
 
 export default class ListViewDemo extends Component {
 	constructor(props) {
@@ -28,11 +33,6 @@ export default class ListViewDemo extends Component {
 				if(res.status === 200) {
 					// parse response
 					let data = JSON.parse(res._bodyInit).books;
-					data = data.map(item=> {
-						// add a props for mark
-						item.isCheck = false;
-						return item;
-					})
 					this.setState({
 						loading: false,
 						data: data,
@@ -51,15 +51,19 @@ export default class ListViewDemo extends Component {
 		return (
 			<TouchableOpacity 
 				style = {[styles.item, {backgroundColor: isSelected ? 'red' : 'white'}]}
-				onLongPress = {()=> {
-					this.delete.call(this, row);
-				}}
-				onPress = {()=> {
-					this.select.call(this, row);
-				}}
 			>
-				<Text>{row.title}</Text>
-				<Text>{row.isCheck}</Text>
+				<Image
+					source = {{uri: row.image}}
+					style = {{width: 85, height: 120, marginRight: 20}}
+					resizeMode = 'stretch'
+				/>
+				<View style = {{flexDirection: 'column', width: width-150}}>
+					<Text style = {{fontSize: 16}}>{row.title}</Text>
+					<Text
+						numberOfLines = {3}
+						style = {{color: '#ccc'}}
+					>{row.summary}</Text>
+				</View>
 			</TouchableOpacity>
 		)
 	}
@@ -80,13 +84,8 @@ export default class ListViewDemo extends Component {
 					dataSource = {this.state.dataSource}
 					renderRow = {this._renderRow.bind(this)}
 					enableEmptySections = {true}
+					initialListSize = {4}
 				/>
-				<TouchableOpacity
-					style = {styles.btn}
-					onPress = {this.add.bind(this)}
-				>
-					<Text>More</Text>
-				</TouchableOpacity>
 			</View>
 		)
 	}
@@ -112,8 +111,7 @@ const styles = StyleSheet.create({
 		borderStyle: 'solid',
 		borderColor: '#ccc',
 		// 
-		flexDirection: 'row',
-		justifyContent: 'space-between'
+		flexDirection: 'row'
 	},
 	btn: {
 		paddingVertical: 10,
