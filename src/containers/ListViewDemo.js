@@ -37,6 +37,10 @@ export default class ListViewDemo extends Component {
 				if(res.status === 200) {
 					// parse response
 					let data = JSON.parse(res._bodyInit).books;
+					data = data.map(item=> {
+						item.isCheck = false;
+						return item;
+					});
 					this.setState({
 						loading: false,
 						data: data,
@@ -56,6 +60,8 @@ export default class ListViewDemo extends Component {
 		return (
 			<TouchableOpacity 
 				style = {[styles.item, {backgroundColor: isSelected ? 'red' : 'white'}]}
+				onLongPress = {this.delete.bind(this, row)}
+				onPress = {this.select.bind(this, row)}
 			>
 				<Image
 					source = {{uri: row.image}}
@@ -68,6 +74,7 @@ export default class ListViewDemo extends Component {
 						numberOfLines = {3}
 						style = {{color: '#ccc'}}
 					>{row.summary}</Text>
+					<Text>{row.isCheck ? 'YES' : 'NO'}</Text>
 				</View>
 			</TouchableOpacity>
 		)
@@ -87,6 +94,10 @@ export default class ListViewDemo extends Component {
 						alert('no data response');
 						return;
 					}else {
+						response = response.map(item=> {
+							item.isCheck = false;
+							return item;
+						})
 						let oldAry = [...this.state.data];
 						let newAry = [...oldAry, ...response];
 						this.setState({
@@ -103,6 +114,39 @@ export default class ListViewDemo extends Component {
 				alert(JSON.stringify(err));
 			})
 	}
+
+	// 
+	// 删除指定行
+  delete(row) {
+    let oldAry = [...this.state.data];
+    let index = oldAry.indexOf(row);
+    oldAry.splice(index, 1);
+    let newAry = oldAry;
+    this.setState({
+      data: newAry,
+      dataSource: this.state.dataSource.cloneWithRows(newAry)
+    });
+  }
+
+  // choose a item
+  // 点击选中
+  select(row) {
+    let oldAry = [...this.state.data];
+    let index = oldAry.indexOf(row);
+    // 对旧数据中的值进行更新
+    let newRow = Object.assign({}, row, {
+		    ﻿isCheck: !row.isCheck
+		});
+    let newAry = [
+    	...oldAry.slice(0, index),
+    	newRow,
+    	...oldAry.slice(index+1)
+    ];
+    this.setState({
+      data: newAry,
+      dataSource: this.state.dataSource.cloneWithRows(newAry)
+    });
+  }
 
 	_renderFooter() {
 		if(this.state.loadingMore) {
