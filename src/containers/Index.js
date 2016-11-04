@@ -9,6 +9,8 @@ import {
 
 // 模态框测试
 import ModalView from './ModalDemo';
+// Image 组件测试
+import ImageView from './ImageDemo';
 
 export default class Index extends Component {
 	constructor(props) {
@@ -26,6 +28,13 @@ export default class Index extends Component {
 					}}
 				>
 					<Text>Modal</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					onPress = {()=> {
+						onForward('Image Page', ImageView);
+					}}
+				>
+					<Text>Image</Text>
 				</TouchableOpacity>
 			</View>
 		)
