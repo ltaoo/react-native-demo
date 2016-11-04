@@ -13,12 +13,16 @@ import {
 
 let {height, width} = Dimensions.get('window');
 
+let index = 1;
+let pageSize = 5;
 export default class ListViewDemo extends Component {
 	constructor(props) {
 		super(props);
 		// 初始化 state
 		this.state = {
 			loading: true,
+			// is click load more ?
+			loadingMore: false,
 			data: [],
 			dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
 			// 选中数组
@@ -28,7 +32,7 @@ export default class ListViewDemo extends Component {
 	// 
 	componentDidMount() {
 		// get data from server
-		fetch('https://api.douban.com/v2/book/search?q=react&count=10')
+		fetch('https://api.douban.com/v2/book/search?q=react&count='+pageSize)
 			.then(res=> {
 				if(res.status === 200) {
 					// parse response
@@ -37,7 +41,8 @@ export default class ListViewDemo extends Component {
 						loading: false,
 						data: data,
 						dataSource: this.state.dataSource.cloneWithRows(data)
-					})
+					});
+					pageSize += 1;
 				}
 			})
 			.catch(err=> {
@@ -67,6 +72,57 @@ export default class ListViewDemo extends Component {
 			</TouchableOpacity>
 		)
 	}
+	// load more data from server
+	loadMore() {
+		this.setState({
+			loadingMore: true
+		});
+		let page = (index-1)*pageSize;
+		fetch(`https://api.douban.com/v2/book/search?q=react&start=${page}&count=${pageSize}`)
+			.then(res=> {
+				if(res.status === 200) {
+					// parse response
+					let response = JSON.parse(res._bodyInit).books;
+					if(response.length === 0) {
+						alert('no data response');
+						return;
+					}else {
+						let oldAry = [...this.state.data];
+						let newAry = [...oldAry, ...response];
+						this.setState({
+							loading: false,
+							loadingMore: false,
+							data: newAry,
+							dataSource: this.state.dataSource.cloneWithRows(newAry)
+						});
+						index += 1;
+					}
+				}
+			})
+			.catch(err=> {
+				alert(JSON.stringify(err));
+			})
+	}
+
+	_renderFooter() {
+		if(this.state.loadingMore) {
+			return (
+				<View
+					style = {{paddingVertical: 10, justifyContent: 'center', alignItems: 'center'}}
+				>
+					<Text>loading...</Text>
+				</View>
+			)
+		}
+		return (
+			<TouchableOpacity
+				onPress = {this.loadMore.bind(this)}
+				style = {{paddingVertical: 10, justifyContent: 'center', alignItems: 'center'}}
+			>
+				<Text>click it load more</Text>
+			</TouchableOpacity>
+		)
+	}
 	//
 	render() {
 		if(this.state.loading) {
@@ -85,6 +141,7 @@ export default class ListViewDemo extends Component {
 					renderRow = {this._renderRow.bind(this)}
 					enableEmptySections = {true}
 					initialListSize = {4}
+					renderFooter = {this._renderFooter.bind(this)}
 				/>
 			</View>
 		)
