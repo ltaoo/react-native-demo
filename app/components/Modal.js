@@ -27,27 +27,20 @@ export default class cutomerModal extends Component {
 		// 设置模态框是否显示的函数
 		// 要让模态框关闭，就要调用这个方法，并传入 false
 		setModalVisible: PropTypes.fun,
-		// 模态框内容
-		content: PropTypes.object,
 		// 是否透明？
 		transparent: true
 	};
 
 	static defaultProps = {
 		// 默认弹出模态框没有动画
-		animationType: 'none',
-		content: (
-			<TouchableOpacity
-	        >
-	        	<Text>关闭</Text>
-	      	</TouchableOpacity>
-	    )
+		animationType: 'none'
 	};
+
+	// 监听
 
 	render() {
 		const {
 			animationType,
-			content,
 			transparent,
 			visible,
 			setModalVisible
@@ -58,8 +51,7 @@ export default class cutomerModal extends Component {
 		};
 		// 模态框背景色
 		const innerContainerTransparentStyle = {
-			backgroundColor: '#fff',
-			padding: 20
+			backgroundColor: '#fff'
 		};
 		return (
 	        <Modal
@@ -70,7 +62,7 @@ export default class cutomerModal extends Component {
 	        >
 		        <View style={[styles.container, modalBackgroundStyle]}>
 		            <View style={[styles.innerContainer, innerContainerTransparentStyle]}>
-		              	{content}
+		              	{this.props.children}
 		            </View>
 		        </View>
 	        </Modal>

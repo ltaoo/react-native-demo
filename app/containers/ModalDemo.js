@@ -24,25 +24,15 @@ export default class ModalDemo extends Component {
 			transparent: true,
 			input: ''
 		};
-
-		this.renderContent = this.renderContent.bind(this);
-	}
-	// 渲染模态框内容
-	renderContent() {
-		return (
-			<View>
-				<TextInput 
-					onChange = {(value)=> {
-						this.setState({
-							input: value
-						})
-					}}
-				/>
-			</View>
-		)
 	}
 	_setModalVisible(visible) {
 	    this.setState({modalVisible: visible});
+  	}
+  	// 输入事件
+  	_input(value) {
+		this.setState({
+			input: value
+		})
   	}
 
 	render() {
@@ -52,8 +42,24 @@ export default class ModalDemo extends Component {
 		          	animationType={this.state.animationType}
 		          	transparent={this.state.transparent}
 		          	visible={this.state.modalVisible}
-		          	content = {this.renderContent()}
 		        >
+		        	<TextInput 
+		        		onChangeText = {(event)=> {
+		        			this._input.call(this, event);
+		        		}}
+		        	/>
+		        	<View style = {styles.btnGroup}>
+			        	<Button
+			        		onPress = {this._setModalVisible.bind(this, false)}
+			        	>
+			        		关闭模态框
+			        	</Button>
+			        	<Button
+			        		onPress = {this._setModalVisible.bind(this, false)}
+			        	>
+			        		确定
+			        	</Button>
+		        	</View>
 		        </Modal>
 
 		        <Button onPress={this._setModalVisible.bind(this, true)}>
@@ -100,5 +106,9 @@ let styles = StyleSheet.create({
 	},
 	modalButton: {
 		marginTop: 10,
+	},
+	// 模态框按钮组
+	btnGroup: {
+		flexDirection: 'row'
 	}
 });

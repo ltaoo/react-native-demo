@@ -22,7 +22,7 @@ export default class Index extends Component {
 				<Text>Index Component</Text>
 				<TouchableOpacity
 					onPress = {()=> {
-						onForward('modal', ModalView);
+						onForward('Modal Page', ModalView);
 					}}
 				>
 					<Text>Modal</Text>
