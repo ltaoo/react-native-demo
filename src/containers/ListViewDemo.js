@@ -13,8 +13,8 @@ import {
 
 let {height, width} = Dimensions.get('window');
 
-let index = 1;
 let pageSize = 5;
+
 export default class ListViewDemo extends Component {
 	constructor(props) {
 		super(props);
@@ -25,8 +25,7 @@ export default class ListViewDemo extends Component {
 			loadingMore: false,
 			data: [],
 			dataSource: new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 }),
-			// 选中数组
-			selected: []
+			index: 2
 		};
 	}
 	// 
@@ -46,7 +45,6 @@ export default class ListViewDemo extends Component {
 						data: data,
 						dataSource: this.state.dataSource.cloneWithRows(data)
 					});
-					pageSize += 1;
 				}
 			})
 			.catch(err=> {
@@ -54,12 +52,10 @@ export default class ListViewDemo extends Component {
 			})
 	}
 	// 单列样式
-	_renderRow(row, sectionId, rowId) {
-		// 判断该行是否已被选中
-		let isSelected = this.state.selected.indexOf(row) > -1;
+	_renderRow(row) {
 		return (
 			<TouchableOpacity 
-				style = {[styles.item, {backgroundColor: isSelected ? 'red' : 'white'}]}
+				style = {styles.item}
 				onLongPress = {this.delete.bind(this, row)}
 				onPress = {this.select.bind(this, row)}
 			>
@@ -84,8 +80,8 @@ export default class ListViewDemo extends Component {
 		this.setState({
 			loadingMore: true
 		});
-		let page = (index-1)*pageSize;
-		fetch(`https://api.douban.com/v2/book/search?q=react&start=${page}&count=${pageSize}`)
+		let start = (this.state.index-1)*pageSize;
+		fetch(`https://api.douban.com/v2/book/search?q=react&start=${start}&count=${pageSize}`)
 			.then(res=> {
 				if(res.status === 200) {
 					// parse response
@@ -104,9 +100,9 @@ export default class ListViewDemo extends Component {
 							loading: false,
 							loadingMore: false,
 							data: newAry,
-							dataSource: this.state.dataSource.cloneWithRows(newAry)
+							dataSource: this.state.dataSource.cloneWithRows(newAry),
+							index: this.state.index+1
 						});
-						index += 1;
 					}
 				}
 			})
@@ -183,9 +179,11 @@ export default class ListViewDemo extends Component {
 					style = {styles.list}
 					dataSource = {this.state.dataSource}
 					renderRow = {this._renderRow.bind(this)}
-					enableEmptySections = {true}
 					initialListSize = {4}
+					// render a btn
 					renderFooter = {this._renderFooter.bind(this)}
+					// hidden scroller
+					showsVerticalScrollIndicator = {false}
 				/>
 			</View>
 		)
