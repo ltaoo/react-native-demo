@@ -1,3 +1,5 @@
-# react-native init包
+# React-Naitve 学习
 
-把 react-native-video 这个项目删除掉已有的业务逻辑代码，来得到一个 init 包。
+对学习的 React-Naitve 组件进行实际使用。
+
+同时也是开发过程中的试验用 App。

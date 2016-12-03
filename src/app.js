@@ -160,7 +160,7 @@ export default class App extends Component {
 					}
 				}
 				navigationBar = {this._renderNavBar.call(this)}
-				sceneStyle={{paddingTop: (Platform.OS === 'android' ? 60 : 74)}}
+				sceneStyle={{paddingTop: (Platform.OS === 'android' ? 60 : 65)}}
 			/>
 		)
 	}

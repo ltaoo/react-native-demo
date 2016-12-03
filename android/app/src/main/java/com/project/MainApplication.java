@@ -1,4 +1,4 @@
-package com.videoplayer;
+package com.project;
 
 import android.app.Application;
 import android.util.Log;

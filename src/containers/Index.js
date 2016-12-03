@@ -15,6 +15,8 @@ import ImageView from './ImageDemo';
 import ListviewView from './ListViewDemo';
 // TEST
 import Test from './test';
+// 图片懒加载demo
+import LazyloadImageDemo from './LazyloadImageDemo'
 
 export default class Index extends Component {
 	constructor(props) {
@@ -48,6 +50,14 @@ export default class Index extends Component {
 					}}
 				>
 					<Text style = {styles.text}>ListView Demo</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style = {styles.btn}
+					onPress = {()=> {
+						onForward('LazyloadImage', LazyloadImageDemo);
+					}}
+				>
+					<Text style = {styles.text}>Lazyload Image Demo</Text>
 				</TouchableOpacity>
 			</View>
 		)

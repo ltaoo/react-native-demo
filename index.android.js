@@ -8,4 +8,4 @@ import {
 
 import App from './src/app';
 
-AppRegistry.registerComponent('VideoPlayer', () => App);
+AppRegistry.registerComponent('project', () => App);
