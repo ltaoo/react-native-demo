@@ -8,29 +8,25 @@ import {
 	InteractionManager,
 	TouchableOpacity
 } from 'react-native'
+// 获取屏幕宽高
+const screenWidth = Dimensions.get('window').width
+const screenHeight = Dimensions.get('window').height
 
 export default class CustomImage extends Component {
 	constructor(props) {
 		super(props)
 
-		// 先给一个默认宽高
-		const {width, height} = Dimensions.get('window')
+		// 先给图片一个默认宽高
 		this.state = {
-			width,
-			screenHeight: height,
+			width: screenWidth,
 			height: 300,
 			loaded: false
 		}
-
+		this._loadImg = this._loadImg.bind(this)
 		this._onLayout = this._onLayout.bind(this)
-		this._getPosition = this._getPosition.bind(this)
 		this._renderRemoteImg = this._renderRemoteImg.bind(this)
 	}
-
-	componentDidMount() {
-		// 隔1s后看看这个组件
-	}
-
+	// 从网络请求图片的方法
 	_loadImg() {
 		InteractionManager.runAfterInteractions(() => {
 			const {source, style} = this.props
@@ -58,45 +54,30 @@ export default class CustomImage extends Component {
 	}
 	// 获取组件初始化位置
 	_onLayout(e, node) {
-		let {x, y, width, height} = e.nativeEvent.layout;
+		let {y} = e.nativeEvent.layout;
 		this.setState({
 			offsetY: y
 		})
 	}
-
-	_measureLayout() {
-
-	}
-
+	// 渲染远程图片
 	_renderRemoteImg(y) {
-		const {source, resizeMode, defaultSource} = this.props
+		const {source} = this.props
 		if(this.state.loaded) {
 			// 如果真正的图片加载好
 			return <Image 
 				source = {source}
 				style = {{height: this.state.height}}
-				resizeMode = {resizeMode || 'contain'}
+				resizeMode = {'contain'}
 				onLayout = {this._onLayout}
-				measureLayout = {this._measureLayout}
 			/>
 		}
-		// 不然就显示默认的
-		if(defaultSource) {
-			// 如果有写默认图片
-			return <Image 
-				source = {defaultSource}
-				style = {{width: this.state.width, height: this.state.height}}
-				resizeMode = {resizeMode || 'contain'}
-			/>
-		}
-		// 加载中
+		// 加载中视图
 		return this._renderLoad('正在加载中...')
 	}
 
-	// 显示
 	render() {
 		if(this.state.loadFail) {
-			// 优先判断这个，加载失败显示
+			// 优先判断这个，加载失败视图
 			return this._renderLoad('加载失败，点击重试')
 		}
 		// 先显示默认的
@@ -104,7 +85,6 @@ export default class CustomImage extends Component {
 		if(y+this.state.screenHeight >= this.state.offsetY && !this.state.loaded) {
 			// 如果内容偏移量大于图片组件y位置，就加载图片
 			this._loadImg()
-			// alert(`${y}, ${this.state.offsetY}`)
 		}
 		// 如果有 uri 属性，表示是远程图片
 		if(source.uri) {
@@ -112,36 +92,21 @@ export default class CustomImage extends Component {
 		}
 		// 这是加载本地图片的渲染
 		return <Image 
-			source = {source} 
-			style = {{width: this.state.width}}
-			resizeMode = {resizeMode || 'contain'}
+			{...this.props}
 		/>
 		
 	}
-	_getPosition() {
-		this.refs.image.measure((x, y, width, height, pageX, pageY) => {
-			alert(`${x}, ${y}, ${pageX}, ${pageY}`)
-		})
-	}
-
+	// 获取加载中、加载失败视图的函数
 	_renderLoad(text) {
 		return(
 			<View 
 				ref = 'image'
 				style = {styles.loadContainer}
 				onLayout = {this._onLayout}
-				measure = {(x, y, width ,height, pageX, pageY)=> {
-					alert(`${x}, ${y}, ${pageX}, ${pageY}`)
-				}}
 			>
 				<Text 
 					style = {styles.loadText}
 				>{text}</Text>
-				<TouchableOpacity
-					onPress = {this._getPosition}
-				>
-					<Text>clic it </Text>
-				</TouchableOpacity>
 			</View>
 		)
 	}

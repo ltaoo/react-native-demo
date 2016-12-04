@@ -9,84 +9,78 @@ import {
 
 import Image from '../components/Image'
 
-// import {
-// 	ScrollView,
-// 	Image
-// } from 'react-native-lazyload'
-
 export default class ImageDemo extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			x: 0,
 			y: 0
 		}
 
-		this._onContentSizeChange = this._onContentSizeChange.bind(this)
-		this._getPosition = this._getPosition.bind(this)
 		this._onScroll = this._onScroll.bind(this)
-	}
-
-	_onContentSizeChange(width, height) {
-		// alert(`${width},${height}`)
 	}
 
 	// 滑动触发
 	_onScroll(e) {
-		// 获取位置？
-		let {x, y} = e.nativeEvent.contentOffset;
+		// 获取滑动的距离
+		let {y} = e.nativeEvent.contentOffset;
 		this.setState({
-			x,
 			y
 		})
 	}
 
-	_getPosition() {
-		// this.refs.scroll.measureLayout((x, y, width, height, pageX, pageY)=> {
-		// 	alert(`${x}, ${y}, ${pageX}, ${pageY}`)
-		// })
-		// let result = []
-		// for(let key in this.scroll) {
-		// 	result.push(`${key}: ${this.scroll[key]}`)
-		// }
-
-		// alert(result.join(','))
-	}
-
-
 	render() {
 		return (
 			<ScrollView 
-				ref = {(r)=> this.scroll = r}
 				style = {styles.container}
-				showsVerticalScrollIndicator = {false}
-				onContentSizeChange = {this._onContentSizeChange}
 				onScroll = {this._onScroll}
 			>
-				<Text
-					style = {styles.text}
-					onPress = {this._getPosition}
-				>点击获取位置</Text>
-				<Text style = {styles.text}>假设这是文章详情页，存在很多文字和图片</Text>
-				<Text style = {styles.text}>就像便当盒的3个部分，分为主食／配菜／餐后水果（当然也有不一样的分配，我们就按最基本的来）</Text>
-				<Text style = {styles.text}>在1000元资金配比过程中，由于物品的选择，价格也是大不同的，所以壹间君会在下面给出一个物品选择的方案，大概了解一下就好~</Text>
+				<Text style = {[styles.text, styles.title]}>假设这是文章详情页，存在很多文字和图片</Text>
+				<Text style = {styles.text}>在我阅读的前端库、Python后台库的过程中，我们都是以造轮子为目的展开的。所以在最开始的时候，我需要一个可以工作，并且拥有我想要的功能的版本。</Text>
+				<Text style = {styles.text}>紧接着，我就可以开始去实践这个版本中的一些功能，并理解他们是怎么工作的。再用git大法展开之前修改的内容，可以使用IDE自带的Diff工具：</Text>
 				<Image
-					source = {{uri: 'https://pi2c4.zhimg.com/ac12fd206385ac03f7d1119419185973_b.jpg'}}
+					source = {{uri: 'https://pic4.zhimg.com/5bc23b15e827a033d2b4966b6038d987_b.jpg'}}
 					y = {this.state.y}
 				/>
-				<Text style = {styles.text}>在1000元资金配比过程中，由于物品的选择，价格也是大不同的，所以壹间君会在下面给出一个物品选择的方案，大概了解一下就好~</Text>
-				<Text style = {styles.text}>在1000元资金配比过程中，由于物品的选择，价格也是大不同的，所以壹间君会在下面给出一个物品选择的方案，大概了解一下就好~</Text>
-				<Text style = {styles.text}>在1000元资金配比过程中，由于物品的选择，价格也是大不同的，所以壹间君会在下面给出一个物品选择的方案，大概了解一下就好~</Text>
-				<Text style = {styles.text}>这里壹间君做了一个图，大家可以感受一下从基本到润色的过程，由于不知道题主家的具体情况，所以壹间君都按最基本的来。</Text>
-				<Text style = {styles.text}>这里壹间君做了一个图，大家可以感受一下从基本到润色的过程，由于不知道题主家的具体情况，所以壹间君都按最基本的来。</Text>
-				<Text style = {styles.text}>这里壹间君做了一个图，大家可以感受一下从基本到润色的过程，由于不知道题主家的具体情况，所以壹间君都按最基本的来。</Text>
-				<Text style = {styles.text}>这里壹间君做了一个图，大家可以感受一下从基本到润色的过程，由于不知道题主家的具体情况，所以壹间君都按最基本的来。</Text>
-				<Text style = {styles.text}>按照便当盒的配比我们可以看见，基本生活用品（主食）的比例是最大的，如果我们有1000元</Text>
-				<Text style = {styles.text}>在1000元资金配比过程中，由于物品的选择，价格也是大不同的，所以壹间君会在下面给出一个物品选择的方案，大概了解一下就好~</Text>
-				<Text style = {styles.text}>这里壹间君做了一个图，大家可以感受一下从基本到润色的过程，由于不知道题主家的具体情况，所以壹间君都按最基本的来。</Text>
+				<Text style = {styles.text}>或者类似于SourceTree这样的工具，来查看修改的内容。</Text>
+				<Text style = {styles.text}>在我们理解了基本的核心功能后，我们就可以向后查看大、中版本的更新内容了。</Text>
+				<Text style = {styles.text}>开始之前，我们希望大家对版本号管理有一些基本的认识。</Text>
+				<Text style = {styles.text}>我最早阅读的开始软件是Linux，而下面则是Linux的Release过程：</Text>
 				<Image
-					source = {{uri: 'https://pic4.zhimg.com/ac12fd206385ac03f7d1119419185973_b.jpg'}}
+					source = {{uri: 'https://pic3.zhimg.com/f9d7c5343f3da040f891149a8993ed7e_b.png'}}
+					y = {this.state.y}
+				/>
+				<Text style = {styles.text}>表格源自一本书叫《Linux内核0.11(0.95)完全注释》，简单地再介绍一下：</Text>
+				<Text style = {styles.text}>版本0.00是一个hello,world程序</Text>
+				<Text style = {styles.text}>版本0.01包含了可以工作的代码</Text>
+				<Text style = {styles.text}>版本0.11是基本可以正常的版本</Text>
+				<Text style = {styles.text}>1．项目初版本时，版本号可以为 0.1 或 0.1.0, 也可以为 1.0 或 1.0.0，如果你为人很低调，我想你会选择那个主版本号为 0 的方式；</Text>
+				<Image
+					source = {{uri: 'https://pic4.zhimg.com/6a32830fab3b9105fecef3d4f830afe7_b.png'}}
+					y = {this.state.y}
+				/>
+				<Text style = {[styles.text, styles.title]}>假设这是文章详情页，存在很多文字和图片</Text>
+				<Text style = {styles.text}>在我阅读的前端库、Python后台库的过程中，我们都是以造轮子为目的展开的。所以在最开始的时候，我需要一个可以工作，并且拥有我想要的功能的版本。</Text>
+				<Text style = {styles.text}>紧接着，我就可以开始去实践这个版本中的一些功能，并理解他们是怎么工作的。再用git大法展开之前修改的内容，可以使用IDE自带的Diff工具：</Text>
+				<Image
+					source = {{uri: 'https://pic4.zhimg.com/5bc23b15e827a033d2b4966b6038d987_b.jpg'}}
+					y = {this.state.y}
+				/>
+				<Text style = {styles.text}>或者类似于SourceTree这样的工具，来查看修改的内容。</Text>
+				<Text style = {styles.text}>在我们理解了基本的核心功能后，我们就可以向后查看大、中版本的更新内容了。</Text>
+				<Text style = {styles.text}>开始之前，我们希望大家对版本号管理有一些基本的认识。</Text>
+				<Text style = {styles.text}>我最早阅读的开始软件是Linux，而下面则是Linux的Release过程：</Text>
+				<Image
+					source = {{uri: 'https://pic3.zhimg.com/f9d7c5343f3da040f891149a8993ed7e_b.png'}}
+					y = {this.state.y}
+				/>
+				<Text style = {styles.text}>表格源自一本书叫《Linux内核0.11(0.95)完全注释》，简单地再介绍一下：</Text>
+				<Text style = {styles.text}>版本0.00是一个hello,world程序</Text>
+				<Text style = {styles.text}>版本0.01包含了可以工作的代码</Text>
+				<Text style = {styles.text}>版本0.11是基本可以正常的版本</Text>
+				<Text style = {styles.text}>1．项目初版本时，版本号可以为 0.1 或 0.1.0, 也可以为 1.0 或 1.0.0，如果你为人很低调，我想你会选择那个主版本号为 0 的方式；</Text>
+				<Image
+					source = {{uri: 'https://pic4.zhimg.com/6a32830fab3b9105fecef3d4f830afe7_b.png'}}
 					y = {this.state.y}
 				/>
 			</ScrollView>
@@ -103,5 +97,9 @@ const styles = StyleSheet.create({
 	text: {
 		fontSize: 16,
 		marginVertical: 10
+	},
+	title: {
+		fontSize: 20,
+		marginTop: 10
 	}
 })

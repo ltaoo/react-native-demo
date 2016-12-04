@@ -51,14 +51,6 @@ export default class Index extends Component {
 				>
 					<Text style = {styles.text}>ListView Demo</Text>
 				</TouchableOpacity>
-				<TouchableOpacity
-					style = {styles.btn}
-					onPress = {()=> {
-						onForward('LazyloadImage', LazyloadImageDemo);
-					}}
-				>
-					<Text style = {styles.text}>Lazyload Image Demo</Text>
-				</TouchableOpacity>
 			</View>
 		)
 	}
