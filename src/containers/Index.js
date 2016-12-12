@@ -16,7 +16,8 @@ import ListviewView from './ListViewDemo';
 // TEST
 import Test from './test';
 // 图片懒加载demo
-import LazyloadImageDemo from './LazyloadImageDemo'
+// import LazyloadImageDemo from './ImageDemo'
+import Alert from '../components/Alert';
 
 export default class Index extends Component {
 	constructor(props) {
@@ -50,6 +51,18 @@ export default class Index extends Component {
 					}}
 				>
 					<Text style = {styles.text}>ListView Demo</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style = {styles.btn}
+					onPress = {()=> {
+						// 调用自定义的 Alert
+						Alert.show();
+						setTimeout(() => {
+							Alert.hidden();
+						}, 3000);
+					}}
+				>
+					<Text style = {styles.text}>显示自定义 Alert</Text>
 				</TouchableOpacity>
 			</View>
 		)
