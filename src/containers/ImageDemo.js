@@ -5,9 +5,11 @@ import {
 	Text,
 	// Image,
 	ScrollView,
+	TouchableOpacity
 } from 'react-native';
 
 import Image from '../components/Image'
+import Alert from '../components/Alert'
 
 export default class ImageDemo extends Component {
 	constructor(props) {
@@ -42,6 +44,13 @@ export default class ImageDemo extends Component {
 					source = {{uri: 'https://pic4.zhimg.com/5bc23b15e827a033d2b4966b6038d987_b.jpg'}}
 					y = {this.state.y}
 				/>
+				<TouchableOpacity
+					onPress= {() => {
+						Alert.show('hello world')
+					}}
+				>
+					<Text>点击</Text>
+				</TouchableOpacity>
 				<Text style = {styles.text}>或者类似于SourceTree这样的工具，来查看修改的内容。</Text>
 				<Text style = {styles.text}>在我们理解了基本的核心功能后，我们就可以向后查看大、中版本的更新内容了。</Text>
 				<Text style = {styles.text}>开始之前，我们希望大家对版本号管理有一些基本的认识。</Text>

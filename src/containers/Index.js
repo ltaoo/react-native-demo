@@ -3,8 +3,10 @@ import {
 	StyleSheet,
 	View,
 	Text,
-	Modal,
-	TouchableOpacity
+	// Modal,
+	TouchableOpacity,
+	Alert,
+	Dimensions
 } from 'react-native';
 
 // 模态框测试
@@ -17,11 +19,16 @@ import ListviewView from './ListViewDemo';
 import Test from './test';
 // 图片懒加载demo
 // import LazyloadImageDemo from './ImageDemo'
-import Alert from '../components/Alert';
+import Modal from '../components/Alert';
 
 export default class Index extends Component {
 	constructor(props) {
 		super(props);
+	}
+
+	componentDidMount() {
+		const {width, height} = Dimensions.get('window')
+		// alert(width)
 	}
 
 	render() {
@@ -56,10 +63,7 @@ export default class Index extends Component {
 					style = {styles.btn}
 					onPress = {()=> {
 						// 调用自定义的 Alert
-						Alert.show();
-						setTimeout(() => {
-							Alert.hidden();
-						}, 3000);
+						Modal.show('hello world and some thing, 试试看很多文字的情况会怎么样');
 					}}
 				>
 					<Text style = {styles.text}>显示自定义 Alert</Text>

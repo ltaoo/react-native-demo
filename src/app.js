@@ -33,10 +33,11 @@ export default class App extends Component {
 	componentDidMount() {
 		BackAndroid.addEventListener('hardwareBackPress', this.handleBack.bind(this));
 		// 处理自定义 Alert
-		DeviceEventEmitter.addListener("alert",(event)=>{
+		DeviceEventEmitter.addListener("alert", (content = '')=>{
 			// alert('showAlert')
 			this.setState({
-				alert: event ? true : false
+				alert: content ? true : false,
+				content
 			})
 		});
 	}
@@ -179,6 +180,7 @@ export default class App extends Component {
 				/>
 				<Alert 
 					visible = {this.state.alert}
+					content = {this.state.content}
 				/>
 			</View>
 		)
