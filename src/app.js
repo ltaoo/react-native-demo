@@ -35,10 +35,18 @@ export default class App extends Component {
 		// 处理自定义 Alert
 		DeviceEventEmitter.addListener("alert", (content = '')=>{
 			// alert('showAlert')
-			this.setState({
-				alert: content ? true : false,
-				content
-			})
+			if(!content) {
+				setTimeout(() => {
+					this.setState({
+						alert: false,
+					})
+				}, 3000);
+			} else {
+				this.setState({
+					alert: true,
+					content
+				})
+			}
 		});
 	}
 

@@ -7,8 +7,13 @@ import {
 	Modal,
 	DeviceEventEmitter,
 	TouchableOpacity,
-	Dimensions
+	Dimensions,
+	Animated,
+	Easing,
+	PixelRatio
 } from 'react-native';
+
+const pixel1 = 1 / PixelRatio.get();
 
 export default class Alert extends Component {
 	constructor(props) {
@@ -16,7 +21,9 @@ export default class Alert extends Component {
 
 		this.state = {
 			content: '',
-			visible: false
+			visible: false,
+			opacity: new Animated.Value(.4),
+			scale: new Animated.Value(1.2)
 		}
 	}
 
@@ -41,18 +48,49 @@ export default class Alert extends Component {
 		DeviceEventEmitter.emit("alert");
 	};
 
+	componentDidMount() {
+		DeviceEventEmitter.addListener("alert", (content = '')=>{
+			if(content) {
+				Animated.parallel(['opacity', 'scale'].map(property => {
+		                return Animated.timing(this.state[property], {
+		                toValue: 1,
+		                duration: 100,
+		                easing: Easing.linear
+		            });
+		        })).start();
+			} else {
+				Animated.parallel(['opacity', 'scale'].map(property => {
+		                return Animated.timing(this.state[property], {
+		                toValue: 1,
+		                duration: 200,
+		                easing: Easing.linear
+		            });
+		        })).start();   
+			}
+		});
+	}
+
 	render() {
 		const {
 			visible,
 			content
 		} = this.props;
 		// 遮罩背景色
+		const _this = this;
 		const modalBackgroundStyle = {
-			backgroundColor: 'rgba(0, 0, 0, 0.5)',
+			backgroundColor: 'rgba(0, 0, 0, 0.5)'
 		};
 		// 模态框背景色
 		const innerContainerTransparentStyle = {
-			backgroundColor: '#fff'
+			backgroundColor: '#fff',
+			opacity: _this.state.opacity,
+			transform: [{
+	            // rotateZ: this.state.rotation.interpolate({
+	            //     inputRange: [0,1],
+	            //     outputRange: ['0deg', '360deg']
+	            // })
+	            scale: _this.state.scale
+           }]
 		};
 		return (
 			<Modal
@@ -61,8 +99,8 @@ export default class Alert extends Component {
 	          	onRequestClose = {()=> this.props.visible = false}
 	        >
 		        <View style={[styles.container, modalBackgroundStyle]}>
-		            <View style={[styles.innerContainer, innerContainerTransparentStyle]}>
-		            	<View style = {styles.body}>
+		            <Animated.View style={[styles.innerContainer, innerContainerTransparentStyle]}>
+		           	<View style = {styles.body}>
 		            		<Text style = {styles.bodyText}>{content}</Text>
 		            	</View>
 		            	<View style = {styles.btns}>
@@ -83,7 +121,7 @@ export default class Alert extends Component {
 		            			<Text style = {styles.btnTitle}>确定</Text>
 		            		</TouchableOpacity>
 		            	</View>
-		            </View>
+		            </Animated.View>
 		        </View>
 	        </Modal>
 		)
@@ -109,7 +147,7 @@ const styles = StyleSheet.create({
 		// width: Dimensions.get('window').width * 0.7333,
 		width: 275,
 		// 下边缘有根线
-		borderBottomWidth: 1,
+		borderBottomWidth: pixel1,
 		borderStyle: 'solid',
 		borderColor: '#eee',
 	},
@@ -130,7 +168,7 @@ const styles = StyleSheet.create({
 	},
 	btnLeftBorder: {
 		// 右边缘有根线
-		borderRightWidth: 1,
+		borderRightWidth: pixel1,
 		borderStyle: 'solid',
 		borderColor: '#eee',
 	},
