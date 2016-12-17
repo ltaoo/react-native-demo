@@ -22,9 +22,11 @@ export default class Alert extends Component {
 		this.state = {
 			content: '',
 			visible: false,
-			opacity: new Animated.Value(.4),
+			opacity: new Animated.Value(.2),
 			scale: new Animated.Value(1.2)
-		}
+		};
+
+		this._hidden = this._hidden.bind(this);
 	}
 
 	static PropTypes = {
@@ -54,20 +56,25 @@ export default class Alert extends Component {
 				Animated.parallel(['opacity', 'scale'].map(property => {
 		                return Animated.timing(this.state[property], {
 		                toValue: 1,
-		                duration: 100,
+		                duration: 150,
 		                easing: Easing.linear
 		            });
 		        })).start();
-			} else {
-				Animated.parallel(['opacity', 'scale'].map(property => {
-		                return Animated.timing(this.state[property], {
-		                toValue: 1,
-		                duration: 200,
-		                easing: Easing.linear
-		            });
-		        })).start();   
-			}
+			} 
 		});
+	}
+
+	_hidden() {
+		Animated.parallel(['opacity', 'scale'].map(property => {
+                return Animated.timing(this.state[property], {
+                toValue: property === 'scale' ? 1.1 : .4,
+                duration: 100,
+                easing: Easing.linear
+            });
+        })).start();   
+        setTimeout(() => {
+	        DeviceEventEmitter.emit("alert", false);
+        }, 100);
 	}
 
 	render() {
@@ -107,7 +114,7 @@ export default class Alert extends Component {
 		            		<TouchableOpacity
 		            			style = {[styles.btn, styles.btnLeftBorder]}
 		            			onPress= {() => {
-		            				DeviceEventEmitter.emit("alert", false);
+		            				this._hidden();
 		            			}}
 		            		>
 		            			<Text style = {styles.btnTitle}>取消</Text>

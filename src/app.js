@@ -36,11 +36,9 @@ export default class App extends Component {
 		DeviceEventEmitter.addListener("alert", (content = '')=>{
 			// alert('showAlert')
 			if(!content) {
-				setTimeout(() => {
-					this.setState({
-						alert: false,
-					})
-				}, 3000);
+				this.setState({
+					alert: false,
+				})
 			} else {
 				this.setState({
 					alert: true,
